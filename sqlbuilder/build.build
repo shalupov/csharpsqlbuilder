@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<project name="SqlBuilderMain" default="build" basedir=".">
+    <target name="build">
+        <delete dir="bin" />
+        <mkdir dir="bin" />
+        
+        <nant target="build">
+            <buildfiles>
+                <include name="SqlBuilder/build.build"/>
+                <include name="SqlBuilder.SchemaGenerator/build.build"/>
+                <include name="SqlBuilder.Tests/build.build"/>
+            </buildfiles>
+        </nant>
+        
+        <copy file="lib/nunit.framework.dll" todir="bin" />
+        <copy file="lib/MySql.Data.dll" todir="bin" />
+    </target>
+
+    <target name="test" depends="build">
+        <exec program="nunit-console" commandline="bin/SqlBuilder.Tests.dll" />
+    </target>
+</project>

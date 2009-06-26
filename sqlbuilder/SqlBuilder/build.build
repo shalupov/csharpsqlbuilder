@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<project name="SqlBuilder" default="build" basedir=".">
+    <target name="build">
+        <csc target="library" output="../bin/SqlBuilder.dll">
+            <sources><include name="src/*.cs" /></sources>
+        </csc>
+    </target>
+</project>
