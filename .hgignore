@@ -1,0 +1,6 @@
+syntax: glob
+
+bin
+_ReSharper.*
+*\obj\Debug\*
+*\obj\Release\*
