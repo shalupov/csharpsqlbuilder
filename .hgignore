@@ -4,3 +4,6 @@ bin
 _ReSharper.*
 *\obj\Debug\*
 *\obj\Release\*
+*.resharper
+*.user
+*.suo
