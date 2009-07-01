@@ -420,7 +420,7 @@ namespace SqlBuilder.Tests {
     public void And() {
       SelectStatement sql = Sql.Select(Users.Name.As("myname"))
         .Where(Sql.And(Users.Name == ChargeRecord.RealHours, ChargeRecord.Id < Users.GroupId));
-      Assert.AreEqual("SELECT users.name AS myname FROM users WHERE (users.name = charge_record.real_hours AND charge_record.id < users.group_id)",
+      Assert.AreEqual("SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) AND (charge_record.id < users.group_id))",
                       sql.ToSQL());
     }
     
@@ -428,7 +428,7 @@ namespace SqlBuilder.Tests {
     public void Or() {
       SelectStatement sql = Sql.Select(Users.Name.As("myname"))
         .Where(Sql.Or(Users.Name == ChargeRecord.RealHours, ChargeRecord.Id < Users.GroupId));
-      Assert.AreEqual("SELECT users.name AS myname FROM users WHERE (users.name = charge_record.real_hours OR charge_record.id < users.group_id)",
+      Assert.AreEqual("SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) OR (charge_record.id < users.group_id))",
                       sql.ToSQL());
     }
 

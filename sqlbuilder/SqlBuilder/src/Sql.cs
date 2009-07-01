@@ -24,19 +24,11 @@ namespace SqlBuilder {
     public static Expression In(Expression e1, Expression e2) {
       return new BinaryOperator {Op = "IN", Argument1 = e1, Argument2 = e2};
     }
-
-    public static Expression And(Expression e1, Expression e2) {
-      return new BinaryOperator {Op = "AND", Argument1 = e1, Argument2 = e2};
-    }
     
     public static Expression And(params Expression[] es) {
       return new MultipleOperator("AND", es);
     }
-
-    public static Expression Or(Expression e1, Expression e2) {
-      return new BinaryOperator {Op = "OR", Argument1 = e1, Argument2 = e2};
-    }
-    
+   
     public static Expression Or(params Expression[] es) {
       return new MultipleOperator("OR", es);
     }
