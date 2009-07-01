@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace SqlBuilder {
   public class Function : Expression {
-    private readonly List<Expression> myArguments = new List<Expression>();
+    protected readonly List<Expression> myArguments = new List<Expression>();
 
-    private readonly bool myUseBrackets = true;
+    protected readonly bool myUseBrackets = true;
 
     public Function(string name, params Expression[] es) {
       Name = name;
@@ -40,7 +40,7 @@ namespace SqlBuilder {
       if (myUseBrackets) {
         return Name +
                "(" +
-               ", ".Join(myArguments.Map(x => x.ToSQL().AddBrackets())) +
+               ", ".Join(myArguments.Map(x => x.ToSQL().SurroundWithBrackets())) +
                ")";
       }
 

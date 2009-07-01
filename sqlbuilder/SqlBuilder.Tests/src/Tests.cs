@@ -1,6 +1,4 @@
-using System;
 using NUnit.Framework;
-using SqlBuilder;
 
 namespace SqlBuilder.Tests {
   [TestFixture]
@@ -18,7 +16,6 @@ namespace SqlBuilder.Tests {
     public void AddColumns() {
       SelectStatement sql = Sql.Select(Users.Id)
         .AddColumns(Users.Balance, Users.GroupId);
-//      Console.WriteLine(sql);
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.id, users.balance, users.group_id FROM users");
     }
@@ -26,7 +23,6 @@ namespace SqlBuilder.Tests {
     [Test]
     public void As() {
       SelectStatement sql = Sql.Select(Users.Name.As("myname"));
-      Console.WriteLine(sql.ToSQL());
       Assert.AreEqual("SELECT users.name AS myname FROM users",
                       sql.ToSQL());
     }
@@ -334,6 +330,15 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.id, users.balance, users.group_id FROM users ORDER BY users.name ASC");
     }
+    
+    [Test]
+    public void OrderByAscByDefault() {
+      SelectStatement sql = Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId)
+        .OrderBy(Users.Name);
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.id, users.balance, users.group_id FROM users ORDER BY users.name ASC");
+    }
 
     [Test]
     public void OrderByDesc() {
@@ -383,6 +388,18 @@ namespace SqlBuilder.Tests {
         .Where(Users.Balance == subQuery);
       Assert.AreEqual(sql.ToSQL(),
         "SELECT users.id, users.balance, users.group_id FROM users WHERE (users.balance = (SELECT users.id, users.balance, users.group_id FROM users))");
+    }
+
+[Test]
+    public void SubQueryStatementWithouBrackets() {
+      var subQuery = new SubqueryExpression(Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId), false);
+
+      SelectStatement sql = Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId)
+        .Where(Sql.Exists(subQuery));
+      Assert.AreEqual(sql.ToSQL(),
+        "SELECT users.id, users.balance, users.group_id FROM users WHERE (EXISTS(SELECT users.id, users.balance, users.group_id FROM users))");
     }
 
     [Test]
@@ -534,6 +551,85 @@ namespace SqlBuilder.Tests {
         );
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT DATE_ADD(users.id, INTERVAL 120 YEAR) FROM users");
+    }
+
+    [Test]
+    public void Or2() {
+      SelectStatement sql = Sql.Select(Users.Name.As("myname"))
+        .Where(Sql.Or(
+                 Users.Name == ChargeRecord.RealHours,
+                 ChargeRecord.Id < Users.GroupId,
+                 Users.GroupId > ChargeRecord.GroupId));
+      Assert.AreEqual(
+        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) OR (charge_record.id < users.group_id) OR (users.group_id > charge_record.group_id))",
+        sql.ToSQL());
+    }
+    
+    [Test]
+    public void And2() {
+      SelectStatement sql = Sql.Select(Users.Name.As("myname"))
+        .Where(Sql.And(
+                 Users.Name == ChargeRecord.RealHours,
+                 ChargeRecord.Id < Users.GroupId,
+                 Users.GroupId > ChargeRecord.GroupId));
+      Assert.AreEqual(
+        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) AND (charge_record.id < users.group_id) AND (users.group_id > charge_record.group_id))",
+        sql.ToSQL());
+    }
+    
+    [Test]
+    public void Left() {
+      SelectStatement sql = Sql.Select(
+        Sql.Left(Users.Id, 1)
+        );
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT LEFT((users.id), (1)) FROM users");
+    }
+    
+    [Test]
+    public void Right() {
+      SelectStatement sql = Sql.Select(
+        Sql.Right(Users.Id, 1)
+        );
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT RIGHT((users.id), (1)) FROM users");
+    }
+    
+    [Test]
+    public void Substring() {
+      SelectStatement sql = Sql.Select(
+        Sql.Substring(Users.Id, 1, 3)
+        );
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT SUBSTRING((users.id), (1), (3)) FROM users");
+    }
+
+    [Test]
+    public void Exists() {
+      SelectStatement sql = Sql.Select(Users.Name).Where(Sql.Exists(Users.Id));
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.name FROM users WHERE (EXISTS(users.id))");
+    }
+    
+    [Test]
+    public void NotExists() {
+      SelectStatement sql = Sql.Select(Users.Name).Where(Sql.NotExists(Users.Id));
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.name FROM users WHERE (NOT(EXISTS(users.id)))");
+    }
+    
+    [Test]
+    public void CastToString() {
+      SelectStatement sql = Sql.Select(Sql.CastToString(Users.Name));
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT CAST(users.name AS CHAR) FROM users");
+    }
+    
+    [Test]
+    public void Lpad() {
+      SelectStatement sql = Sql.Select(Sql.Lpad(Users.Name, 2, "0"));
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT LPAD(users.name, 2, '0') FROM users");
     }
   }
 }

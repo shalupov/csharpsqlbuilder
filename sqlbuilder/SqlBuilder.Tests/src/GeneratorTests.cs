@@ -39,13 +39,13 @@ namespace SqlBuilder.Tests {
 
     [Test]
     public void Table() {
-      myGenerator.WriteTableSchema("users_p", new[] {"id", "group_id"});
+      myGenerator.WriteTableSchema("prod", "users_p", new[] {"id", "group_id"});
       Assert.AreEqual("  public class UsersPTable {\n" +
                       "    public SqlColumn Id, GroupId;\n" +
                       "    public ISqlTable Table;\n" +
                       "\n" +
                       "    public UsersPTable(string tableName) {\n" +
-                      "      Table = new RealSqlTable(\"users_p\", tableName);\n" +
+                      "      Table = new RealSqlTable(\"prod.users_p\", tableName);\n" +
                       "      Id = new SqlColumn(\"id\", Table);\n" +
                       "      GroupId = new SqlColumn(\"group_id\", Table);\n" +
                       "    }\n" +
@@ -56,7 +56,7 @@ namespace SqlBuilder.Tests {
                       "    public static readonly ISqlTable Table;\n" +
                       "\n" +
                       "    static UsersP() {\n" +
-                      "      Table = new RealSqlTable(\"users_p\");\n" +
+                      "      Table = new RealSqlTable(\"prod.users_p\");\n" +
                       "      Id = new SqlColumn(\"id\", Table);\n" +
                       "      GroupId = new SqlColumn(\"group_id\", Table);\n" +
                       "    }\n\n" +

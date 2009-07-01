@@ -9,8 +9,12 @@ namespace SqlBuilder {
       }
     }
 
-    public static string AddBrackets(this string s) {
+    public static string SurroundWithBrackets(this string s) {
       return "(" + s + ")";
+    }
+    
+    public static string SurroundWithSpaces(this string s) {
+      return " " + s + " ";
     }
 
     public static string Join<T>(this string delimiter, IEnumerable<T> source) {
