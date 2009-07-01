@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<project name="SqlBuilder.SchemaGenerator" default="build" basedir=".">
+    <target name="build">
+        <csc target="exe" output="../bin/SqlBuilder.SchemaGenerator.exe">
+            <sources><include name="src/*.cs" /></sources>
+            <references>
+                <include name="../bin/SqlBuilder.dll"/>
+                <include name="System.Data.dll"/>
+                <include name="../lib/MySql.Data.dll"/>
+            </references>
+        </csc>
+    </target>
+</project>
