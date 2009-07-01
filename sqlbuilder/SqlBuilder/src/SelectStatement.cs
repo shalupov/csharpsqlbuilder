@@ -115,7 +115,11 @@ namespace SqlBuilder {
       clone.myAndHaving.AddRange(es);
       return clone;
     }
-
+    
+    public SelectStatement Join(ISqlTable table, params Expression[] cond) {
+      return Join(JoinType.InnerJoin, table, cond);
+    }
+    
     public SelectStatement Join(JoinType type, ISqlTable table, params Expression[] cond) {
       SelectStatement clone = Clone();
       clone.myJoins.Add(new JoinPart
@@ -133,6 +137,10 @@ namespace SqlBuilder {
       SelectStatement clone = Clone();
       clone.myOrderBy.Add(new OrderByStatement {Column = column, Type = type});
       return clone;
+    }
+    
+    public SelectStatement OrderBy(SqlColumn column) {
+      return OrderBy(column, OrderByType.Ascending);
     }
 
     public SelectStatement Limit(int limit) {

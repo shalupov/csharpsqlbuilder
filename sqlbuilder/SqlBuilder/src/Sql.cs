@@ -28,9 +28,17 @@ namespace SqlBuilder {
     public static Expression And(Expression e1, Expression e2) {
       return new BinaryOperator {Op = "AND", Argument1 = e1, Argument2 = e2};
     }
+    
+    public static Expression And(params Expression[] es) {
+      return new MultipleOperator("AND", es);
+    }
 
     public static Expression Or(Expression e1, Expression e2) {
       return new BinaryOperator {Op = "OR", Argument1 = e1, Argument2 = e2};
+    }
+    
+    public static Expression Or(params Expression[] es) {
+      return new MultipleOperator("OR", es);
     }
 
     public static Expression More(Expression e1, Expression e2) {
@@ -60,9 +68,61 @@ namespace SqlBuilder {
     public static Expression Multiply(Expression e1, Expression e2) {
       return new BinaryOperator {Op = "*", Argument1 = e1, Argument2 = e2};
     }
+  
+    public static Expression Not(Expression e) {
+      return new Function("NOT", e);
+    }
+    
+    public static Expression Not(bool useBrackets, Expression e) {
+      return new Function("NOT", useBrackets, e);
+    }
+    
+    public static Expression Exists(Expression e) {
+      return new Function("EXISTS", false, e);
+    }
+    
+    public static Expression NotExists(Expression e) {
+      return Not(false, Exists(e));
+    }
+    
+    public static Expression CastToString(Expression e) {
+      return new CastFunction("CHAR", e);
+    }
+    
+    public static Expression Lpad(Expression e, int size, Expression filler) {
+      return new Function("LPAD", false, e, Const(size), filler);
+    }
+    
+    public static Expression Lpad(Expression e, int size, string filler) {
+      return Lpad(e, size, Const(filler));
+    }
 
     public static Expression IfNull(Expression e1, Expression e2) {
       return new Function("IFNULL", e1, e2);
+    }
+    
+    public static Expression IfNull(Expression e1, int e2) {
+      return new Function("IFNULL", e1, Const(e2));
+    }
+    
+    public static Expression Left(Expression e, int offset) {
+      return new Function("LEFT", e, Const(offset));
+    }
+    
+    public static Expression Right(Expression e, int offset) {
+      return new Function("RIGHT", e, Const(offset));
+    }
+    
+    public static Expression Replace(params Expression[] es) {
+      return new Function("REPLACE", es);
+    }
+    
+    public static Expression Substring(Expression e, int start, int lenght) {
+      return new Function("SUBSTRING", e, Const(start), Const(lenght));
+    }
+    
+    public static Expression IfNull(Expression e1, string e2) {
+      return new Function("IFNULL", e1, Const(e2));
     }
 
     public static Expression Concat(params Expression[] es) {

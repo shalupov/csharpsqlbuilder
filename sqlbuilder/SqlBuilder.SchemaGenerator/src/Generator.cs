@@ -23,8 +23,8 @@ namespace SqlBuilder.SchemaGenerator {
       myWriter.WriteLine("}");
     }
 
-    public void WriteTableSchema(string table, IEnumerable<string> columns) {
-      WriteNonStaticTableSchema(table, columns);
+    public void WriteTableSchema(string schema, string table, IEnumerable<string> columns) {
+      WriteNonStaticTableSchema(schema, table, columns);
       myWriter.WriteLine("  public class {0} {{", myNameConverter.ConvertName(table));
       myWriter.WriteLine("    public static readonly SqlColumn {0};",
                          ", ".Join(columns.Map(x => myNameConverter.ConvertName(x))));
@@ -32,7 +32,7 @@ namespace SqlBuilder.SchemaGenerator {
       myWriter.WriteLine();
 
       myWriter.WriteLine("    static {0}() {{", myNameConverter.ConvertName(table));
-      myWriter.WriteLine("      Table = new RealSqlTable(\"{0}\");", table);
+      myWriter.WriteLine("      Table = new RealSqlTable(\"{0}\");", schema + "." + table);
 
       foreach (string column in columns) {
         myWriter.WriteLine("      {0} = new SqlColumn(\"{1}\", Table);",
@@ -56,7 +56,7 @@ namespace SqlBuilder.SchemaGenerator {
 
     }
 
-    private void WriteNonStaticTableSchema(string table, IEnumerable<string> columns) {
+    private void WriteNonStaticTableSchema(string schema, string table, IEnumerable<string> columns) {
       myWriter.WriteLine("  public class {0}Table {{", myNameConverter.ConvertName(table));
       myWriter.WriteLine("    public SqlColumn {0};",
                    ", ".Join(columns.Map(x => myNameConverter.ConvertName(x))));
@@ -64,7 +64,7 @@ namespace SqlBuilder.SchemaGenerator {
       myWriter.WriteLine();
       
       myWriter.WriteLine("    public {0}Table(string tableName) {{", myNameConverter.ConvertName(table));
-      myWriter.WriteLine("      Table = new RealSqlTable(\"{0}\", tableName);", table);
+      myWriter.WriteLine("      Table = new RealSqlTable(\"{0}\", tableName);", schema + "." + table);
       
       foreach (string column in columns) {
         myWriter.WriteLine("      {0} = new SqlColumn(\"{1}\", Table);",

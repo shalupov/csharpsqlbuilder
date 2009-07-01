@@ -1,9 +1,16 @@
 ﻿namespace SqlBuilder {
   public class SubqueryExpression : Expression {
+    private readonly bool myIsSurrounBrackets;
     private readonly SelectStatement myStatement;
 
     public SubqueryExpression(SelectStatement ss) {
       myStatement = ss;
+      myIsSurrounBrackets = true;
+    }
+
+    public SubqueryExpression(SelectStatement ss, bool isSurroundBrackets) {
+      myStatement = ss;
+      myIsSurrounBrackets = isSurroundBrackets;
     }
 
     public SelectStatement Statement {
@@ -19,7 +26,9 @@
     }
 
     public override string ToSQL() {
-      return "(" + myStatement.ToSQL() + ")";
+      if (myIsSurrounBrackets)
+        return "(" + myStatement.ToSQL() + ")";
+      return myStatement.ToSQL();
     }
   }
 }

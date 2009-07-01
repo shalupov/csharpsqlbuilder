@@ -42,6 +42,8 @@
     <Compile Include="src\AsExpression.cs" />
     <Compile Include="src\BinaryOperator.cs" />
     <Compile Include="src\BindExpression.cs" />
+    <Compile Include="src\CastFunction.cs" />
+    <Compile Include="src\MultipleOperator.cs" />
     <Compile Include="src\Constant.cs" />
     <Compile Include="src\DateInterval.cs" />
     <Compile Include="src\DateIntervalType.cs" />
