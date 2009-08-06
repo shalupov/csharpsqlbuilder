@@ -7,6 +7,7 @@
                 <include name="../bin/SqlBuilder.dll"/>
                 <include name="System.Data.dll"/>
                 <include name="../lib/MySql.Data.dll"/>
+                <include name="../lib/NDesk.Options.dll"/>
             </references>
         </csc>
     </target>
