@@ -14,6 +14,7 @@
         
         <copy file="lib/nunit.framework.dll" todir="bin" />
         <copy file="lib/MySql.Data.dll" todir="bin" />
+        <copy file="lib/NDesk.Options.dll" todir="bin" />
     </target>
 
     <target name="test" depends="build">
