@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using NUnit.Framework;
 using SqlBuilder.SchemaGenerator;
@@ -20,11 +19,9 @@ namespace SqlBuilder.Tests {
     private StringWriter myWriter;
 
     public string WriterString {
-        get {
-            return myWriter.ToString().Replace("\r", "");
-        }
+      get { return myWriter.ToString().Replace("\r", ""); }
     }
-    
+
     [Test]
     public void Footer() {
       myGenerator.WriteFooter();
@@ -35,6 +32,15 @@ namespace SqlBuilder.Tests {
     public void Header() {
       myGenerator.WriteHeader("some.namespace");
       Assert.AreEqual("using SqlBuilder;\n\nnamespace some.namespace {\n", WriterString);
+    }
+
+    [Test]
+    public void RoutineWriter() {
+      myGenerator.WriteRoutineSchema("prod", "Simple");
+      Assert.AreEqual("  public class Simple : StoredFunction {\n" +
+                      "    public Simple(params Expression[] args) : base(\"Simple\", args) {}\n" +
+                      "  }\n"
+                      , WriterString);
     }
 
     [Test]
@@ -50,7 +56,6 @@ namespace SqlBuilder.Tests {
                       "      GroupId = new SqlColumn(\"group_id\", Table);\n" +
                       "    }\n" +
                       "  }\n\n" +
-                      
                       "  public class UsersP {\n" +
                       "    public static readonly SqlColumn Id, GroupId;\n" +
                       "    public static readonly ISqlTable Table;\n" +

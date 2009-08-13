@@ -34,5 +34,17 @@ namespace SqlBuilder.SchemaGenerator {
         }
       }
     }
+
+    public IEnumerable<string> GetRoutines(string schema) {
+      using (IDbCommand command = myConnection.CreateCommand()) {
+        command.CommandText =
+          Sql.Select(RoutinesTable.SpecificName).Where(RoutinesTable.RoutineSchema == schema,
+                                                       RoutinesTable.RoutineType == "FUNCTION").ToSQL();
+        using (IDataReader reader = command.ExecuteReader()) {
+          while (reader.Read()) yield return reader.GetString(0);
+          reader.Close();
+        }
+      }
+    }
   }
 }

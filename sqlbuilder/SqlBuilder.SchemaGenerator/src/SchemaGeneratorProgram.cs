@@ -33,6 +33,7 @@ namespace SqlBuilder.SchemaGenerator {
         generator.WriteHeader(nameSpace);
         foreach (string table in catalog.GetTables(schema).ToList())
           generator.WriteTableSchema(schema, table, catalog.GetTableColumns(schema, table));
+        foreach (string routine in catalog.GetRoutines(schema)) generator.WriteRoutineSchema(schema, routine);
         generator.WriteFooter();
       }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SqlBuilder;
@@ -75,6 +76,13 @@ namespace SqlBuilder.SchemaGenerator {
       
       myWriter.WriteLine("  }");
       myWriter.WriteLine();
+    }
+
+    public void WriteRoutineSchema(string schema, string routine) {
+      var convertName = myNameConverter.ConvertName(routine);
+      myWriter.WriteLine("  public class {0} : StoredFunction {{", convertName);
+      myWriter.WriteLine("    public {0}(params Expression[] args) : base(\"{1}\", args) {{}}", convertName, routine);
+      myWriter.WriteLine("  }");
     }
   }
 }
