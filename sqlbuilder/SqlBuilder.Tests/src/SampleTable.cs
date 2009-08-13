@@ -80,8 +80,6 @@ namespace SqlBuilder.Tests {
   }
   
   public class SimpleFunction : StoredFunction {
-    public SimpleFunction(params Expression[] args) : base(args) {
-      myName = "Simple";
-    }
+    public SimpleFunction(params Expression[] args) : base("Simple", args) {}
   }
 }
