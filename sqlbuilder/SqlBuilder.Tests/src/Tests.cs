@@ -631,5 +631,22 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT LPAD(users.name, 2, '0') FROM users");
     }
+
+    [Test]
+    public void SimpleStoredFunction() {
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id));
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT Simple(users.id) FROM users");
+    }
+
+    [Test]
+    public void SimpleStoredFunctionWithManyArgs() {
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id, Office.Name))
+        .Join(Office.Table, Office.Id == Users.GroupId);
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id)");
+    }
   }
 }
