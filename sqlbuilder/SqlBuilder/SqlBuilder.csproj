@@ -60,6 +60,7 @@
     <Compile Include="src\Sql.cs" />
     <Compile Include="src\SqlColumn.cs" />
     <Compile Include="src\ISqlTable.cs" />
+    <Compile Include="src\StoredFunction.cs" />
     <Compile Include="src\SubQuery.cs" />
     <Compile Include="src\SubqueryExpression.cs" />
   </ItemGroup>
