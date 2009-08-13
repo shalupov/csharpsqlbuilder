@@ -23,4 +23,17 @@ namespace SqlBuilder.SchemaGenerator {
       ColumnName = new SqlColumn("COLUMN_NAME", Table);
     }
   }
+  
+  public class RoutinesTable {
+    public static readonly SqlColumn SpecificName, RoutineSchema, RoutineType;
+    public static readonly ISqlTable Table;
+
+    static RoutinesTable() {
+      Table = new RealSqlTable("INFORMATION_SCHEMA.ROUTINES");
+
+      SpecificName = new SqlColumn("SPECIFIC_NAME", Table);
+      RoutineSchema = new SqlColumn("ROUTINE_SCHEMA", Table);
+      RoutineType = new SqlColumn("ROUTINE_TYPE", Table);
+    }
+  }
 }
