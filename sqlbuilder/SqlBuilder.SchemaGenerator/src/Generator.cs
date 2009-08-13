@@ -81,7 +81,7 @@ namespace SqlBuilder.SchemaGenerator {
     public void WriteRoutineSchema(string schema, string routine) {
       var convertName = myNameConverter.ConvertName(routine);
       myWriter.WriteLine("  public class {0} : StoredFunction {{", convertName);
-      myWriter.WriteLine("    public {0}(params Expression[] args) : base(\"{1}\", args) {{}}", convertName, routine);
+      myWriter.WriteLine("    public {0}(params Expression[] args) : base(\"{1}.{2}\", args) {{}}", convertName, schema, routine);
       myWriter.WriteLine("  }");
     }
   }

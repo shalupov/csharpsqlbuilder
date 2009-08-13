@@ -38,7 +38,7 @@ namespace SqlBuilder.Tests {
     public void RoutineWriter() {
       myGenerator.WriteRoutineSchema("prod", "Simple");
       Assert.AreEqual("  public class Simple : StoredFunction {\n" +
-                      "    public Simple(params Expression[] args) : base(\"Simple\", args) {}\n" +
+                      "    public Simple(params Expression[] args) : base(\"prod.Simple\", args) {}\n" +
                       "  }\n"
                       , WriterString);
     }
