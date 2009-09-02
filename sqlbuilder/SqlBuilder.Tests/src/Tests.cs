@@ -515,6 +515,13 @@ namespace SqlBuilder.Tests {
     }
     
     [Test]
+    public void If() {
+      SelectStatement sql = Sql.Select(
+        Users.Name).Where(Sql.If(Sql.Const(1) > Sql.Const(0), Users.GroupId, Users.Balance));
+      Assert.AreEqual(sql.ToSQL(), "SELECT users.name FROM users WHERE (IF((1 > 0), (users.group_id), (users.balance)))");
+    }
+    
+    [Test]
     public void Day() {
       SelectStatement sql = Sql.Select(Sql.Day(Users.Id));
       Assert.AreEqual(sql.ToSQL(),
