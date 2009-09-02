@@ -93,6 +93,10 @@ namespace SqlBuilder {
       return new Function("IFNULL", e1, e2);
     }
     
+    public static Expression If(Expression e1, Expression e2, Expression e3) {
+      return new Function("IF", e1, e2, e3);
+    }
+    
     public static Expression IfNull(Expression e1, int e2) {
       return new Function("IFNULL", e1, Const(e2));
     }
