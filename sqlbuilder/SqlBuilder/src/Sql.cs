@@ -60,6 +60,10 @@ namespace SqlBuilder {
     public static Expression Multiply(Expression e1, Expression e2) {
       return new BinaryOperator {Op = "*", Argument1 = e1, Argument2 = e2};
     }
+
+    public static Expression Divide(Expression e1, Expression e2) {
+      return new BinaryOperator { Op = "/", Argument1 = e1, Argument2 = e2 };
+    }
   
     public static Expression Not(Expression e) {
       return new Function("NOT", e);

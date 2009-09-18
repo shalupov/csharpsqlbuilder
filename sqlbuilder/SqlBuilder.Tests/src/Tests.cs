@@ -139,6 +139,13 @@ namespace SqlBuilder.Tests {
     }
 
     [Test]
+    public void Divide() {
+      SelectStatement sql = Sql.Select(Users.Id/2);
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.id / 2 FROM users");
+    }
+
+    [Test]
     public void Plus() {
       SelectStatement sql = Sql.Select(Users.Id + Sql.Const(2));
       Assert.AreEqual(sql.ToSQL(),

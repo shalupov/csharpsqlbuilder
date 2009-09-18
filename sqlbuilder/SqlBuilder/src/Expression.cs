@@ -74,6 +74,14 @@ namespace SqlBuilder {
       return Sql.Multiply(e1, Sql.Const(e2));
     }
 
+    public static Expression operator /(Expression e1, Expression e2) {
+      return Sql.Divide(e1, e2);
+    }
+
+    public static Expression operator /(Expression e1, int e2) {
+      return Sql.Divide(e1, Sql.Const(e2));
+    }
+
     public static Expression operator >=(Expression e1, Expression e2) {
       return Sql.MoreOrEqual(e1, e2);
     }
