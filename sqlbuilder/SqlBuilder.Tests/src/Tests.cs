@@ -67,7 +67,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT CONCAT((users.name), (' '), (users.balance)) FROM users");
     }
-
+    
     [Test]
     public void ConcatWS() {
       SelectStatement sql = Sql.Select(
@@ -136,6 +136,13 @@ namespace SqlBuilder.Tests {
       SelectStatement sql = Sql.Select(Users.Id - 2);
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.id - 2 FROM users");
+    }
+
+    [Test]
+    public void Divide() {
+      SelectStatement sql = Sql.Select(Users.Id/2);
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.id / 2 FROM users");
     }
 
     [Test]
@@ -330,7 +337,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.id, users.balance, users.group_id FROM users ORDER BY users.name ASC");
     }
-
+    
     [Test]
     public void OrderByAscByDefault() {
       SelectStatement sql = Sql.Select(Users.Id)
@@ -411,7 +418,7 @@ namespace SqlBuilder.Tests {
         .AddColumns(Users.Balance, Users.GroupId)
         .Join(JoinType.InnerJoin, ChargeRecord.Table,
           ChargeRecord.GroupId == subQuery);
-
+      
       Assert.AreEqual(sql.ToSQL(),
         "SELECT users.id, users.balance, users.group_id FROM users INNER JOIN charge_record ON (charge_record.group_id = (SELECT users.id, users.balance, users.group_id FROM users))");
     }
@@ -423,7 +430,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual("SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) AND (charge_record.id < users.group_id))",
                       sql.ToSQL());
     }
-
+    
     [Test]
     public void Or() {
       SelectStatement sql = Sql.Select(Users.Name.As("myname"))
@@ -486,7 +493,7 @@ namespace SqlBuilder.Tests {
         Users.Name).Where(Sql.IsNull(Users.GroupId));
       Assert.AreEqual(sql.ToSQL(), "SELECT users.name FROM users WHERE (ISNULL((users.group_id)))");
     }
-
+    
     [Test]
     public void Alias() {
       var off = Office.Clone();
@@ -495,7 +502,7 @@ namespace SqlBuilder.Tests {
         .Join(JoinType.InnerJoin, off.Table, off.Name == Users.Id);
       Assert.AreEqual(sql.ToSQL(), "SELECT users.name, t_1.id FROM users INNER JOIN office AS t_1 ON (t_1.name = users.id)");
     }
-
+    
     [Test]
     public void Alias2() {
       var off = Office.Clone();
@@ -506,42 +513,42 @@ namespace SqlBuilder.Tests {
         .Join(JoinType.InnerJoin, off2.Table, off2.Id == Users.Id);
       Assert.AreEqual(sql.ToSQL(), "SELECT users.name, t_1.id FROM users INNER JOIN office AS t_1 ON (t_1.name = users.id) INNER JOIN office AS t_2 ON (t_2.id = users.id)");
     }
-
+    
     [Test]
     public void IfNull() {
       SelectStatement sql = Sql.Select(
         Users.Name).Where(Sql.IfNull(Users.GroupId, Users.Balance));
       Assert.AreEqual(sql.ToSQL(), "SELECT users.name FROM users WHERE (IFNULL((users.group_id), (users.balance)))");
     }
-
+    
     [Test]
     public void If() {
       SelectStatement sql = Sql.Select(
         Users.Name).Where(Sql.If(Sql.Const(1) > Sql.Const(0), Users.GroupId, Users.Balance));
       Assert.AreEqual(sql.ToSQL(), "SELECT users.name FROM users WHERE (IF((1 > 0), (users.group_id), (users.balance)))");
     }
-
+    
     [Test]
     public void Day() {
       SelectStatement sql = Sql.Select(Sql.Day(Users.Id));
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT DAY((users.id)) FROM users");
     }
-
+    
     [Test]
     public void Month() {
       SelectStatement sql = Sql.Select(Sql.Month(Users.Id));
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT MONTH((users.id)) FROM users");
     }
-
+    
     [Test]
     public void Year() {
       SelectStatement sql = Sql.Select(Sql.Year(Users.Id));
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT YEAR((users.id)) FROM users");
     }
-
+    
     [Test]
     public void DateAddMonths() {
       SelectStatement sql = Sql.Select(
@@ -550,7 +557,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT DATE_ADD(users.id, INTERVAL 1 MONTH) FROM users");
     }
-
+    
     [Test]
     public void DateAddYears() {
       SelectStatement sql = Sql.Select(
@@ -566,24 +573,24 @@ namespace SqlBuilder.Tests {
         .Where(Sql.Or(
                  Users.Name == ChargeRecord.RealHours,
                  ChargeRecord.Id < Users.GroupId,
-                 ChargeRecord.GroupId < Users.GroupId));
+                 Users.GroupId > ChargeRecord.GroupId));
       Assert.AreEqual(
-        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) OR (charge_record.id < users.group_id) OR (charge_record.group_id < users.group_id))",
+        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) OR (charge_record.id < users.group_id) OR (users.group_id > charge_record.group_id))",
         sql.ToSQL());
     }
-
+    
     [Test]
     public void And2() {
       SelectStatement sql = Sql.Select(Users.Name.As("myname"))
         .Where(Sql.And(
                  Users.Name == ChargeRecord.RealHours,
                  ChargeRecord.Id < Users.GroupId,
-                 ChargeRecord.GroupId < Users.GroupId));
+                 Users.GroupId > ChargeRecord.GroupId));
       Assert.AreEqual(
-        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) AND (charge_record.id < users.group_id) AND (charge_record.group_id < users.group_id))",
+        "SELECT users.name AS myname FROM users WHERE ((users.name = charge_record.real_hours) AND (charge_record.id < users.group_id) AND (users.group_id > charge_record.group_id))",
         sql.ToSQL());
     }
-
+    
     [Test]
     public void Left() {
       SelectStatement sql = Sql.Select(
@@ -592,7 +599,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT LEFT((users.id), (1)) FROM users");
     }
-
+    
     [Test]
     public void Right() {
       SelectStatement sql = Sql.Select(
@@ -601,7 +608,7 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT RIGHT((users.id), (1)) FROM users");
     }
-
+    
     [Test]
     public void Substring() {
       SelectStatement sql = Sql.Select(
@@ -617,21 +624,21 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.name FROM users WHERE (EXISTS(users.id))");
     }
-
+    
     [Test]
     public void NotExists() {
       SelectStatement sql = Sql.Select(Users.Name).Where(Sql.NotExists(Users.Id));
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT users.name FROM users WHERE (NOT(EXISTS(users.id)))");
     }
-
+    
     [Test]
     public void CastToString() {
       SelectStatement sql = Sql.Select(Sql.CastToString(Users.Name));
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT CAST(users.name AS CHAR) FROM users");
     }
-
+    
     [Test]
     public void Lpad() {
       SelectStatement sql = Sql.Select(Sql.Lpad(Users.Name, 2, "0"));
@@ -654,6 +661,19 @@ namespace SqlBuilder.Tests {
         .Join(Office.Table, Office.Id == Users.GroupId);
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id)");
+    }
+    
+    [Test]
+    public void SmokeUnion() {
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id, Office.Name))
+        .Join(Office.Table, Office.Id == Users.GroupId);
+      SelectStatement sql2 = Sql.Select(Users.Id);
+      UnionExpression union = Sql.Union(sql, sql2);
+      Assert.AreEqual(union.ToSQL(), "(UNION " + 
+                      "(SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id))" +
+                      "(SELECT users.id FROM users))"
+                      );
     }
   }
 }
