@@ -63,6 +63,7 @@
     <Compile Include="src\StoredFunction.cs" />
     <Compile Include="src\SubQuery.cs" />
     <Compile Include="src\SubqueryExpression.cs" />
+    <Compile Include="src\UnionExpression.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
