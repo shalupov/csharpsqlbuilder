@@ -662,5 +662,18 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
                       "SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id)");
     }
+    
+    [Test]
+    public void SmokeUnion() {
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id, Office.Name))
+        .Join(Office.Table, Office.Id == Users.GroupId);
+      SelectStatement sql2 = Sql.Select(Users.Id);
+      UnionExpression union = Sql.Union(sql, sql2);
+      Assert.AreEqual(union.ToSQL(), "(UNION " + 
+                      "(SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id))" +
+                      "(SELECT users.id FROM users))"
+                      );
+    }
   }
 }

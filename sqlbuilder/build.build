@@ -18,6 +18,9 @@
     </target>
 
     <target name="test" depends="build">
-        <exec program="nunit-console" commandline="bin/SqlBuilder.Tests.dll" />
+        <nunit2>
+            <formatter type="Plain" />
+            <test assemblyname="bin/SqlBuilder.Tests.dll" />
+        </nunit2>
     </target>
 </project>
