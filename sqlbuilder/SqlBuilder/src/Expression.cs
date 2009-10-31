@@ -133,7 +133,7 @@ namespace SqlBuilder {
     public static Expression And(Expression e1, Expression e2) {
       return Sql.And(e1, e2);
     }
-    
+
     public static Expression Or(Expression e1, Expression e2) {
       return Sql.Or(e1, e2);
     }
