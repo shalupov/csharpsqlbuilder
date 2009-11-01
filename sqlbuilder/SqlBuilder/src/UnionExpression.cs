@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace SqlBuilder {
@@ -26,8 +25,8 @@ namespace SqlBuilder {
     public override void Accept(IVisitor visitor) {
       visitor.Visit(this);
     }
-    
-  public UnionExpression OrderBy(SqlColumn column, OrderByType type) {
+
+    public UnionExpression OrderBy(SqlColumn column, OrderByType type) {
       var clone = Clone() as UnionExpression;
 // ReSharper disable PossibleNullReferenceException
       clone.myOrderBy.Add(new OrderByStatement {Column = column, Type = type});
@@ -49,11 +48,10 @@ namespace SqlBuilder {
     }
 
     public override string ToSQL() {
-      return ("UNION " +
-              myFirstSelectStatement.ToSQL().SurroundWithBrackets() +
-              mySecondSelectStatement.ToSQL().SurroundWithBrackets() +
-              OrderByToSQL()
-             ).SurroundWithBrackets();
+      return myFirstSelectStatement.ToSQL().SurroundWithBrackets() +
+             " UNION " +
+             mySecondSelectStatement.ToSQL().SurroundWithBrackets() +
+             OrderByToSQL();
     }
   }
 }
