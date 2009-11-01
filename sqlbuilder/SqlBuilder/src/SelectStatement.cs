@@ -115,11 +115,11 @@ namespace SqlBuilder {
       clone.myAndHaving.AddRange(es);
       return clone;
     }
-    
+
     public SelectStatement Join(ISqlTable table, params Expression[] cond) {
       return Join(JoinType.InnerJoin, table, cond);
     }
-    
+
     public SelectStatement Join(JoinType type, ISqlTable table, params Expression[] cond) {
       SelectStatement clone = Clone();
       clone.myJoins.Add(new JoinPart
@@ -138,7 +138,7 @@ namespace SqlBuilder {
       clone.myOrderBy.Add(new OrderByStatement {Column = column, Type = type});
       return clone;
     }
-    
+
     public SelectStatement OrderBy(SqlColumn column) {
       return OrderBy(column, OrderByType.Ascending);
     }
@@ -204,31 +204,6 @@ namespace SqlBuilder {
 
       public string ToSQL() {
         return "LIMIT " + Limit;
-      }
-    }
-
-    #endregion
-
-    #region Nested type: OrderByStatement
-
-    private class OrderByStatement {
-      public SqlColumn Column { get; set; }
-      public OrderByType Type { get; set; }
-
-      private static string OrderByType2String(OrderByType type) {
-        switch (type) {
-          case OrderByType.Ascending:
-            return "ASC";
-          case OrderByType.Descending:
-            return "DESC";
-          default:
-            throw new ApplicationException("Uncovered order by type: " + type);
-        }
-      }
-
-      public string ToSQL() {
-        return Column.ToSQL() + " "
-               + OrderByType2String(Type);
       }
     }
 

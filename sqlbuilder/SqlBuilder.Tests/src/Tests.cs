@@ -675,5 +675,19 @@ namespace SqlBuilder.Tests {
                       "(SELECT users.id FROM users))"
                       );
     }
+    
+    [Test]
+    public void UnionWithOrderBy() {
+      SqlColumn id;
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id, Office.Name))
+        .Join(Office.Table, Office.Id == Users.GroupId);
+      SelectStatement sql2 = Sql.Select(Users.Id.As("id").Bind(out id));
+      UnionExpression union = Sql.Union(sql, sql2).OrderBy(id);
+      Assert.AreEqual(union.ToSQL(), "(UNION " + 
+                      "(SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id))" +
+                      "(SELECT users.id AS id FROM users) ORDER BY id ASC)"
+                      );
+    }
   }
 }
