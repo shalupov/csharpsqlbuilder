@@ -54,6 +54,7 @@
     <Compile Include="src\JoinType.cs" />
     <Compile Include="src\Naming.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\OrderByStatement.cs" />
     <Compile Include="src\OrderByType.cs" />
     <Compile Include="src\RealSqlTable.cs" />
     <Compile Include="src\SelectStatement.cs" />
