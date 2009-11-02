@@ -672,7 +672,7 @@ namespace SqlBuilder.Tests {
       UnionExpression union = Sql.Union(sql, sql2);
       Assert.AreEqual(union.ToSQL(),  
                       "(SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id))" +
-                      
+                      " UNION " +
                       "(SELECT users.id FROM users)"
                       );
     }
@@ -689,6 +689,21 @@ namespace SqlBuilder.Tests {
                       "(SELECT Simple(users.id, office.name) FROM users INNER JOIN office ON (office.id = users.group_id))" +
                       " UNION " +
                       "(SELECT users.id AS id FROM users) ORDER BY id ASC"
+                      );
+    }
+    
+    [Test]
+    public void UnionWithMultiplyOrderBy() {
+      SqlColumn id, name;
+      SelectStatement sql = Sql.Select(
+        new SimpleFunction(Users.Id, Office.Name), Users.Name.As("name").Bind(out name))
+        .Join(Office.Table, Office.Id == Users.GroupId);
+      SelectStatement sql2 = Sql.Select(Users.Id.As("id").Bind(out id), Users.Name.As("name").Bind(out name));
+      UnionExpression union = Sql.Union(sql, sql2).OrderBy(id, name);
+      Assert.AreEqual(union.ToSQL(),
+                      "(SELECT Simple(users.id, office.name), users.name AS name FROM users INNER JOIN office ON (office.id = users.group_id))" +
+                      " UNION " +
+                      "(SELECT users.id AS id, users.name AS name FROM users) ORDER BY id ASC, name ASC"
                       );
     }
   }

@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace SqlBuilder {
-  public class UnionExpression : Expression {
+  public class UnionExpression {
     private readonly SelectStatement myFirstSelectStatement;
     private readonly List<OrderByStatement> myOrderBy = new List<OrderByStatement>();
     private readonly SelectStatement mySecondSelectStatement;
@@ -18,24 +18,20 @@ namespace SqlBuilder {
       mySecondSelectStatement = s2;
     }
 
-    public override Expression Clone() {
+    public UnionExpression Clone() {
       return new UnionExpression(myFirstSelectStatement, mySecondSelectStatement, myOrderBy);
     }
 
-    public override void Accept(IVisitor visitor) {
-      visitor.Visit(this);
-    }
-
     public UnionExpression OrderBy(SqlColumn column, OrderByType type) {
-      var clone = Clone() as UnionExpression;
-// ReSharper disable PossibleNullReferenceException
+      var clone = Clone();
       clone.myOrderBy.Add(new OrderByStatement {Column = column, Type = type});
-// ReSharper restore PossibleNullReferenceException
       return clone;
     }
 
-    public UnionExpression OrderBy(SqlColumn column) {
-      return OrderBy(column, OrderByType.Ascending);
+    public UnionExpression OrderBy(params SqlColumn[] columns) {
+      var clone = Clone();
+      clone.myOrderBy.AddRange(columns.Map(x => new OrderByStatement {Column = x, Type = OrderByType.Ascending}));
+      return clone;
     }
 
     private string OrderByToSQL() {
@@ -47,7 +43,7 @@ namespace SqlBuilder {
       return result.ToString();
     }
 
-    public override string ToSQL() {
+    public string ToSQL() {
       return myFirstSelectStatement.ToSQL().SurroundWithBrackets() +
              " UNION " +
              mySecondSelectStatement.ToSQL().SurroundWithBrackets() +
