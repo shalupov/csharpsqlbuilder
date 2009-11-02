@@ -339,6 +339,15 @@ namespace SqlBuilder.Tests {
     }
     
     [Test]
+    public void MultiplyOrderByAsc() {
+      SelectStatement sql = Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId)
+        .OrderBy(Users.Name, Users.Id);
+      Assert.AreEqual(sql.ToSQL(),
+                      "SELECT users.id, users.balance, users.group_id FROM users ORDER BY users.name ASC, users.id ASC");
+    }
+    
+    [Test]
     public void OrderByAscByDefault() {
       SelectStatement sql = Sql.Select(Users.Id)
         .AddColumns(Users.Balance, Users.GroupId)

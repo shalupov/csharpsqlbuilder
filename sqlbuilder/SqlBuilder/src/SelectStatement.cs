@@ -139,8 +139,10 @@ namespace SqlBuilder {
       return clone;
     }
 
-    public SelectStatement OrderBy(SqlColumn column) {
-      return OrderBy(column, OrderByType.Ascending);
+    public SelectStatement OrderBy(params SqlColumn[] columns) {
+      SelectStatement clone = Clone();
+      clone.myOrderBy.AddRange(columns.Map(x => new OrderByStatement {Column = x, Type = OrderByType.Ascending}));
+      return clone;
     }
 
     public SelectStatement Limit(int limit) {
