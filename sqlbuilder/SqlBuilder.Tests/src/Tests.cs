@@ -460,6 +460,19 @@ namespace SqlBuilder.Tests {
       Assert.AreEqual(sql.ToSQL(),
         "SELECT users.id, users.balance, users.group_id FROM users WHERE (users.balance IN (SELECT users.id, users.balance, users.group_id FROM users))");
     }
+    
+    [Test]
+    public void NotIn() {
+      var subQuery = Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId).ToExpression();
+
+      SelectStatement sql = Sql.Select(Users.Id)
+        .AddColumns(Users.Balance, Users.GroupId)
+        .Where(Sql.NotIn(Users.Balance,subQuery));
+
+      Assert.AreEqual(sql.ToSQL(),
+        "SELECT users.id, users.balance, users.group_id FROM users WHERE (users.balance NOT IN (SELECT users.id, users.balance, users.group_id FROM users))");
+    }
 
     [Test]
     public void Having() {
