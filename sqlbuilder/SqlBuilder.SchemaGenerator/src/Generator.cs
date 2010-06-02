@@ -59,9 +59,9 @@ namespace SqlBuilder.SchemaGenerator {
 
     private void WriteNonStaticTableSchema(string schema, string table, IEnumerable<string> columns) {
       myWriter.WriteLine("  public class {0}Table {{", myNameConverter.ConvertName(table));
-      myWriter.WriteLine("    public SqlColumn {0};",
+      myWriter.WriteLine("    public readonly SqlColumn {0};",
                    ", ".Join(columns.Map(x => myNameConverter.ConvertName(x))));
-      myWriter.WriteLine("    public ISqlTable Table;");
+      myWriter.WriteLine("    public readonly ISqlTable Table;");
       myWriter.WriteLine();
       
       myWriter.WriteLine("    public {0}Table(string tableName) {{", myNameConverter.ConvertName(table));
